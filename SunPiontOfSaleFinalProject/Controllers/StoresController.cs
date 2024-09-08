@@ -1,47 +1,46 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ContextFile;
+using Microsoft.AspNetCore.Mvc;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
 using SunPiontOfSaleFinalProject.Repositories.Interfaces;
 
 namespace SunPiontOfSaleFinalProject.App.Controllers
 {
-    public class ProductsController : Controller
+    public class StoresController : Controller
     {
-       private IBaseRepository<Product> _productRepository;
+        private readonly IBaseRepository<Store> _store;
 
-        public ProductsController(IBaseRepository<Product> productRepository)
+        public StoresController(IBaseRepository<Store> store)
         {
-            _productRepository = productRepository;
+            _store = store;
         }
 
-        // GET: ProductsController
+        // GET: StoresController
         public async Task<ActionResult> Index()
         {
-            var products = await _productRepository.GetAll(null, new[] { "category" });
-            return View(products);
+            var store = await _store.GetAll(s=> s.Id > 2);
+            return View(store);
         }
 
-        // GET: ProductsController/Details/5
-        public async Task<ActionResult> Details(int id)
+        // GET: StoresController/Details/5
+        public ActionResult Details(int id)
         {
-            return View(await _productRepository.GetById(id));
+            return View();
         }
 
-        // GET: ProductsController/Create
+        // GET: StoresController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ProductsController/Create
+        // POST: StoresController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Product item)
+        public ActionResult Create(IFormCollection collection)
         {
             try
             {
-                await _productRepository.AddItem(item);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -50,13 +49,13 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             }
         }
 
-        // GET: ProductsController/Edit/5
+        // GET: StoresController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ProductsController/Edit/5
+        // POST: StoresController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -71,13 +70,13 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             }
         }
 
-        // GET: ProductsController/Delete/5
+        // GET: StoresController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ProductsController/Delete/5
+        // POST: StoresController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

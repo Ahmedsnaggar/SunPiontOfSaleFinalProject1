@@ -9,15 +9,18 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
     public class CategoriesController : Controller
     {
         private ICategoreRepository _category;
-        public CategoriesController(ICategoreRepository category)
+        MyDbContext _dbContext;
+        public CategoriesController(ICategoreRepository category, MyDbContext dbContext)
         {
             _category = category;
+            _dbContext = dbContext;
         }
 
         // GET: CategoriesController
         public async Task<ActionResult> Index()
         {
-            var categories = await _category.GetAllCategories();
+            //var categories = _dbContext.Categories.Where(c=> c.CategoryName.Contains("ev"));
+            var categories = _category.GetAllCategories().Result.Where(c=> c.CategoryName.Contains("ai"));
             return View("CategoriesList", categories);
         }
 

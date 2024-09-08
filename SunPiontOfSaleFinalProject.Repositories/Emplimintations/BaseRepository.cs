@@ -1,6 +1,7 @@
 ﻿using ContextFile;
 using Microsoft.EntityFrameworkCore;
 using SunPiontOfSaleFinalProject.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace SunPiontOfSaleFinalProject.Repositories.Emplimintations
 {
@@ -8,7 +9,7 @@ namespace SunPiontOfSaleFinalProject.Repositories.Emplimintations
     {
         private MyDbContext _db;
         private DbSet<T> _dbSet;
-        public BaseRepository(MyDbContext db, DbSet<T> dbSet)
+        public BaseRepository(MyDbContext db)
         {
             _db = db;
             _dbSet = db.Set<T>();
@@ -28,9 +29,25 @@ namespace SunPiontOfSaleFinalProject.Repositories.Emplimintations
             await _db.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>> caretiria = null, string[] Includes = null)
         {
-            return _dbSet;
+            IQueryable<T> query = _dbSet;
+
+            if(Includes != null)
+            {
+                foreach (var include in Includes) 
+                { 
+                    query = query.Include(include).AsSplitQuery();
+                }
+            }
+
+
+            if(caretiria != null)
+            {
+                return await query.Where(caretiria).ToListAsync();
+            }
+           
+            return await query.ToListAsync();
         }
 
         public async Task<T> GetById(int id)
