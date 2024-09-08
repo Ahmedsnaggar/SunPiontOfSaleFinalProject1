@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SunPiontOfSaleFinalProject.App.Models;
+using ContextFile;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
 
 namespace SunPiontOfSaleFinalProject.App.Controllers

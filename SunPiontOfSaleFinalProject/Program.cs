@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using SunPiontOfSaleFinalProject.App.Models;
+using ContextFile;
+using SunPiontOfSaleFinalProject.Repositories.Interfaces;
+using SunPiontOfSaleFinalProject.Repositories.Emplimintations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<MyDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped<ICategoreRepository, CategoryRepository>();
 
 var app = builder.Build();
 

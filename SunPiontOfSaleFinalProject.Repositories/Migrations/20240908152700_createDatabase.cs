@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SunPiontOfSaleFinalProject.App.Migrations
+namespace SunPiontOfSaleFinalProject.Repositories.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateNewDatabse : Migration
+    public partial class createDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

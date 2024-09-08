@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
 
-namespace SunPiontOfSaleFinalProject.App.Models
+namespace ContextFile
 {
     public class MyDbContext : DbContext
     {

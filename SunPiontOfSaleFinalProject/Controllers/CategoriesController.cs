@@ -1,30 +1,30 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SunPiontOfSaleFinalProject.App.Models;
+using ContextFile;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
+using SunPiontOfSaleFinalProject.Repositories.Interfaces;
 
 namespace SunPiontOfSaleFinalProject.App.Controllers
 {
     public class CategoriesController : Controller
     {
-        private MyDbContext _db;
-
-        public CategoriesController(MyDbContext db)
+        private ICategoreRepository _category;
+        public CategoriesController(ICategoreRepository category)
         {
-            _db = db;
+            _category = category;
         }
 
         // GET: CategoriesController
         public ActionResult Index()
         {
-            var categories = _db.Categories;
+            var categories = _category.GetAllCategories();
             return View("CategoriesList", categories);
         }
 
         // GET: CategoriesController/Details/5
         public ActionResult Details(int id)
         {
-            var category = _db.Categories.FirstOrDefault(c => c.Id == id);
+            var category = _category.GetCategoryById(id);
             return View(category);
         }
         // GET: CategoriesController/Create
@@ -40,14 +40,13 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
-                var categoryTest = _db.Categories.Any(c=> c.CategoryName == item.CategoryName);
+                var categoryTest = _category.GetAllCategories().Any(c=> c.CategoryName == item.CategoryName);
                 if (categoryTest)
                 {
                     ViewBag.ExistsError = "Category Name already exists";
                     return View("NewCategory");
                 }
-                _db.Categories.Add(item);
-                _db.SaveChanges();
+                _category.AddCategory(item);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -59,7 +58,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         // GET: CategoriesController/Edit/5
         public ActionResult Edit(int id)
         {
-            var category = _db.Categories.FirstOrDefault(c=> c.Id == id);
+            var category = _category.GetCategoryById(id);
             if(category == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -74,10 +73,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
-                var category = _db.Categories.FirstOrDefault(c=>c.Id == id);
-                category.CategoryName = Item.CategoryName;
-                category.CategoryDescription = Item.CategoryDescription;
-                _db.SaveChanges();
+               _category.UpDateCategory(id, Item);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -89,7 +85,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         // GET: CategoriesController/Delete/5
         public ActionResult Delete(int id)
         {
-            var category = _db.Categories.FirstOrDefault(c=> c.Id == id);
+            var category = _category.GetCategoryById(id);
             return View(category);
         }
 
@@ -100,9 +96,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
-                var category = _db.Categories.FirstOrDefault(c => c.Id == id);
-                _db.Categories.Remove(category);
-                _db.SaveChanges();
+                _category.DeleteCategory(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
