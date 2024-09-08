@@ -1,4 +1,5 @@
 ﻿using ContextFile;
+using Microsoft.EntityFrameworkCore;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
 using SunPiontOfSaleFinalProject.Repositories.Interfaces;
 
@@ -12,36 +13,36 @@ namespace SunPiontOfSaleFinalProject.Repositories.Emplimintations
             _db = db;
         }
 
-        public Category AddCategory(Category category)
+        public async Task<Category> AddCategory(Category category)
         {
-            _db.Categories.Add(category);
-            _db.SaveChanges();
+            await _db.Categories.AddAsync(category);
+           await  _db.SaveChangesAsync();
             return category;
         }
 
-        public void DeleteCategory(int id)
+        public async Task DeleteCategory(int id)
         {
-            var category = GetCategoryById(id);
+            var category = await GetCategoryById(id);
             _db.Categories.Remove(category);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategories()
         {
-           return _db.Categories.ToList();
+           return await _db.Categories.ToListAsync();
         }
 
-        public Category GetCategoryById(int id)
+        public async Task<Category> GetCategoryById(int id)
         {
-            return _db.Categories.Find(id);
+            return await _db.Categories.FindAsync(id);
         }
 
-        public Category UpDateCategory(int id, Category category)
+        public async Task <Category> UpDateCategory(int id, Category category)
         {
-            var oldCategory = GetCategoryById(id);
+            var oldCategory = await GetCategoryById(id);
             oldCategory.CategoryName = category.CategoryName;
             oldCategory.CategoryDescription = category.CategoryDescription;
-            _db.SaveChanges();
+           await  _db.SaveChangesAsync();
             return oldCategory;
         }
     }

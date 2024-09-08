@@ -15,20 +15,20 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         }
 
         // GET: CategoriesController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var categories = _category.GetAllCategories();
+            var categories = await _category.GetAllCategories();
             return View("CategoriesList", categories);
         }
 
         // GET: CategoriesController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            var category = _category.GetCategoryById(id);
+            var category = await _category.GetCategoryById(id);
             return View(category);
         }
         // GET: CategoriesController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             return View("NewCategory");
         }
@@ -36,17 +36,18 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Category item)
+        public async Task<ActionResult> Create(Category item)
         {
             try
             {
-                var categoryTest = _category.GetAllCategories().Any(c=> c.CategoryName == item.CategoryName);
-                if (categoryTest)
-                {
-                    ViewBag.ExistsError = "Category Name already exists";
-                    return View("NewCategory");
-                }
-                _category.AddCategory(item);
+                //var categoryTest = await _category.GetAllCategories().Result.
+                //    (c=> c.CategoryName == item.CategoryName);
+                //if (categoryTest)
+                //{
+                //    ViewBag.ExistsError = "Category Name already exists";
+                //    return View("NewCategory");
+                //}
+               await  _category.AddCategory(item);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -56,9 +57,9 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         }
 
         // GET: CategoriesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var category = _category.GetCategoryById(id);
+            var category = await _category.GetCategoryById(id);
             if(category == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -69,11 +70,11 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Category Item)
+        public async Task<ActionResult> Edit(int id, Category Item)
         {
             try
             {
-               _category.UpDateCategory(id, Item);
+             await   _category.UpDateCategory(id, Item);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -83,20 +84,20 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         }
 
         // GET: CategoriesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var category = _category.GetCategoryById(id);
+            var category = await _category.GetCategoryById(id);
             return View(category);
         }
 
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
-                _category.DeleteCategory(id);
+                await _category.DeleteCategory(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

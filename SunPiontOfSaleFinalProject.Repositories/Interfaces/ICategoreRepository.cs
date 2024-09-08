@@ -4,10 +4,10 @@ namespace SunPiontOfSaleFinalProject.Repositories.Interfaces
 {
     public interface ICategoreRepository
     {
-        IEnumerable<Category> GetAllCategories();
-        Category GetCategoryById(int id);
-        Category AddCategory(Category category);
-        Category UpDateCategory(int id, Category category);
-        void DeleteCategory(int id);
+        Task<IEnumerable<Category>> GetAllCategories();
+        Task<Category> GetCategoryById(int id);
+        Task<Category> AddCategory(Category category);
+       Task<Category> UpDateCategory(int id, Category category);
+        Task DeleteCategory(int id);
     }
 }
