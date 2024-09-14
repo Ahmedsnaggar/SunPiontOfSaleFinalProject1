@@ -9,8 +9,8 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-12">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
@@ -24,10 +24,30 @@
             </div>
             <div class="form-group">
                 <label asp-for="categoryId" class="control-label"></label>
-                <input asp-for="categoryId" class="form-control" />
+                @* <select asp-for="categoryId" class="form-control" >
+                    @foreach (var item in ViewBag.categories)
+                    {
+                        <option value="@item.Id">@item.CategoryName</option>
+                    }
+                </select> *@
+                @* <select asp-for="categoryId" class="form-control">
+                    @foreach (var item in Model.categoryList)
+                    {
+                        <option value="@item.Id">@item.CategoryName</option>
+                    }
+                </select> *@
+                <select asp-for="categoryId" asp-items="@(new SelectList(Model.categoryList, "Id", "CategoryName"))" class="form-control">
+                    <option value="-1">--Select a category--</option>
+                </select>
                 <span asp-validation-for="categoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="@Model.ImageFile" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="@Model.ImageFile" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group float-end">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -35,7 +55,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="float-end">Back to List</a>
 </div>
 
 @section Scripts {

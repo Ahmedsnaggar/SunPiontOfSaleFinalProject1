@@ -9,10 +9,13 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
     public class ProductsController : Controller
     {
        private IBaseRepository<Product> _productRepository;
-
-        public ProductsController(IBaseRepository<Product> productRepository)
+       private IBaseRepository<Category> _categoryRepository;
+        private IUploadFile _uploadFile;
+        public ProductsController(IBaseRepository<Product> productRepository, IBaseRepository<Category> categoryRepository, IUploadFile uploadFile)
         {
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
+            _uploadFile = uploadFile;
         }
 
         // GET: ProductsController
@@ -29,9 +32,12 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         }
 
         // GET: ProductsController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            //ViewBag.categories = await _categoryRepository.GetAll();
+            var category = await _categoryRepository.GetAll();
+            var product = new Product() { categoryList = category.ToList() };
+            return View(product);
         }
 
         // POST: ProductsController/Create
@@ -41,6 +47,11 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
+                if(item.ImageFile != null)
+                {
+                    string FileName = await _uploadFile.UploadFileAsync("\\Images\\ProductsImages\\", item.ImageFile);
+                    item.ProductImage = FileName;
+                }
                 await _productRepository.AddItem(item);
                 return RedirectToAction(nameof(Index));
             }
@@ -51,23 +62,27 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         }
 
         // GET: ProductsController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var category = await _categoryRepository.GetAll();
+            Product product = await _productRepository.GetById(id);
+            product.categoryList = category.ToList();
+            return View("EditProduct", product);
         }
 
         // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Product item)
         {
             try
             {
+                await _productRepository.UpdateItem(item);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View("EditProduct");
             }
         }
 

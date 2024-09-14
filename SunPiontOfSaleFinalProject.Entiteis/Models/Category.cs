@@ -13,5 +13,7 @@ namespace SunPiontOfSaleFinalProject.Entiteis.Models
         [MaxLength(150)]
         [Display(Name = "Description")]
         public string? CategoryDescription { get; set; }
+
+        
     }
 }

@@ -57,8 +57,9 @@ namespace SunPiontOfSaleFinalProject.Repositories.Emplimintations
 
         public async Task<T> UpdateItem(T item)
         {
-            var oldEntity = _dbSet.Attach(item);
-            oldEntity.State = EntityState.Modified;
+            //var oldEntity = _dbSet.Attach(item);
+            //oldEntity.State = EntityState.Modified;
+            _dbSet.Update(item);
             await _db.SaveChangesAsync();
             return item;
         }

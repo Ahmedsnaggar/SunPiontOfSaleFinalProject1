@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SunPiontOfSaleFinalProject.Entiteis.Models
@@ -16,5 +17,11 @@ namespace SunPiontOfSaleFinalProject.Entiteis.Models
         public int categoryId { get; set; }
         public Category? category { get; set; }
         public string? ProductImage { get; set; }
+
+
+        [NotMapped]
+        public List<Category> categoryList { get; set; }
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
     }
 }

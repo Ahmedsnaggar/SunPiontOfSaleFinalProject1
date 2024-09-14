@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using ContextFile;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
@@ -8,26 +9,23 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
 {
     public class CategoriesController : Controller
     {
-        private ICategoreRepository _category;
-        MyDbContext _dbContext;
-        public CategoriesController(ICategoreRepository category, MyDbContext dbContext)
+       private IBaseRepository<Category> _categoryRepository;
+        public CategoriesController(IBaseRepository<Category> categoryRepository)
         {
-            _category = category;
-            _dbContext = dbContext;
+            _categoryRepository = categoryRepository;
         }
 
         // GET: CategoriesController
         public async Task<ActionResult> Index()
         {
-            //var categories = _dbContext.Categories.Where(c=> c.CategoryName.Contains("ev"));
-            var categories = _category.GetAllCategories().Result.Where(c=> c.CategoryName.Contains("ai"));
+            var categories = await _categoryRepository.GetAll();
             return View("CategoriesList", categories);
         }
 
         // GET: CategoriesController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var category = await _category.GetCategoryById(id);
+            var category = await _categoryRepository.GetById(id);
             return View(category);
         }
         // GET: CategoriesController/Create
@@ -43,14 +41,14 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
-                //var categoryTest = await _category.GetAllCategories().Result.
-                //    (c=> c.CategoryName == item.CategoryName);
-                //if (categoryTest)
-                //{
-                //    ViewBag.ExistsError = "Category Name already exists";
-                //    return View("NewCategory");
-                //}
-               await  _category.AddCategory(item);
+                var categoryTest =  _categoryRepository.GetAll().Result.Any
+                    (c => c.CategoryName == item.CategoryName);
+                if (categoryTest)
+                {
+                    ViewBag.ExistsError = "Category Name already exists";
+                    return View("NewCategory");
+                }
+                await  _categoryRepository.AddItem(item);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -62,7 +60,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         // GET: CategoriesController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var category = await _category.GetCategoryById(id);
+            var category = await _categoryRepository.GetById(id);
             if(category == null)
             {
                 return RedirectToAction(nameof(Index));
@@ -77,7 +75,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
-             await   _category.UpDateCategory(id, Item);
+             await   _categoryRepository.UpdateItem(Item);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -89,7 +87,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         // GET: CategoriesController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var category = await _category.GetCategoryById(id);
+            var category = await _categoryRepository.GetById(id);
             return View(category);
         }
 
@@ -100,7 +98,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
-                await _category.DeleteCategory(id);
+                await _categoryRepository.DeleteItem(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
