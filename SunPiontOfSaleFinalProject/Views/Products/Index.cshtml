@@ -3,13 +3,85 @@
 @{
     ViewData["Title"] = "Products";
 }
+<div class="row">
+    <div class="col-md-6">
+        <h1>Products</h1>
+    </div>
+    <div class="col-md-6 ">
+        <h3 class="float-end btn btn-success"><a asp-action="Create" style="color:white">New</a></h3>
+    </div>
+</div>
+<form asp-action="Index" method="get">
+    <label class="control-label">Search</label>
+    <div class="row">
+        <input type="text" name="search" class="form-control col-md-6 me-2" style="width:50%" placeholder="Search in products" value="@ViewBag.search" />
+    <button type="submit" class="btn btn-info col-md-3" style="width:150px">Search</button>
+        <h3 class="col-md-3">You have : @ViewBag.productscount Products</h3>
+    </div>
+</form>
+<hr />
+<label class="control-label">Search By Ajex</label>
 
-<h1>Products</h1>
+<input type="text" id="livesearchtags" class="form-control" placeholder="Search in products" value="@ViewBag.searchaj" autocomplete="off" />
+<hr />
+<div class="row mt-2" id="productsCards">
+    <partial name="_ProductCards" model="Model" />
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+@section scripts{
+    <script>
+        $('#livesearchtags').on('keyup', function () {
+            LiveSearch();
+        })
+
+        function LiveSearch() {
+            let value = $('#livesearchtags').val();
+            $.ajax({
+                type:"Get",
+                url: '@Url.Action("SearchWithAjex", "Products")',
+                data: { search: value },
+                datatype:"html",
+                success: function (data) {
+                    $('#productsCards').html(data);
+                }
+            })
+        }
+    </script>
+}
+
+
+
+
+@* @foreach(var item in Model)
+{ *@
+       
+    @* <div class="card col-md-4 mb-2">
+        
+        <div class="card-header"><h5>@item.ProductName</h5></div>
+            <div class="card-footer">Category : @item.category.CategoryName  - Price : @item.DefaultPrice</div>
+        <div class="card-body">
+            @if (item.ProductImage == null || item.ProductImage == "")
+            {
+                <img src='\Images\ProductsImages\noImage.png' alt="No Image" style="width:100%; height:100%" />
+            }
+            else
+            {
+                <img src="@item.ProductImage" alt="No Image" style="width:100%" />
+                    
+            }
+        </div>
+            <div class="card-footer">
+                <div>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new {@class="btn btn-primary"}) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary" }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                </div>
+            </div>
+            
+    </div> *@
+@* } *@
+    
+@* <table class="table">
     <thead>
         <tr>
             <th>
@@ -63,4 +135,4 @@
         </tr>
 }
     </tbody>
-</table>
+</table> *@

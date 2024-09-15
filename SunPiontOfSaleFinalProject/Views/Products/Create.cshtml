@@ -1,17 +1,17 @@
 ﻿@model SunPiontOfSaleFinalProject.Entiteis.Models.Product
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Product";
 }
 
-<h1>Create</h1>
+<h1>Create Product</h1>
 
-<h4>Product</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-md-8">
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
                 <input asp-for="ProductName" class="form-control" />
@@ -41,23 +41,40 @@
                 </select>
                 <span asp-validation-for="categoryId" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
                 <label asp-for="@Model.ImageFile" class="control-label"></label>
                 <div class="custom-file">
-                    <input asp-for="@Model.ImageFile" class="form-control" />
+                        <input asp-for="@Model.ImageFile" class="form-control" onchange="loadFile(event)" />
+                </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <img id="output"  width="100%"/>
+            </div>
             <div class="form-group float-end">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary me-1" />
+                <a asp-action="Index" class="float-end btn btn-danger">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" class="float-end">Back to List</a>
+    
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        debugger
+        var loadFile = function (event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function () {
+                URL.revokeObjectURL(output.src)
+            }
+        };
+    </script>
 }

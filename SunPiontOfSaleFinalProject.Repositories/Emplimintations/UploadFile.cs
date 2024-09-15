@@ -29,7 +29,7 @@ namespace SunPiontOfSaleFinalProject.Repositories.Emplimintations
 
             using (var stream = new FileStream(FileName, FileMode.Create))
             {
-                file.CopyToAsync(stream);
+                await file.CopyToAsync(stream);
                 stream.Dispose();
             }
             return filePath + UniqueFileName;

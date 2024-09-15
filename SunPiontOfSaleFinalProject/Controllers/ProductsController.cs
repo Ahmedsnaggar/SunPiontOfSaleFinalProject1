@@ -19,10 +19,37 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         }
 
         // GET: ProductsController
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string search)
         {
-            var products = await _productRepository.GetAll(null, new[] { "category" });
+            IEnumerable<Product> products;
+
+            if(search != null)
+            {
+                ViewBag.search=search;
+                products = await _productRepository.GetAll(p=> p.ProductName.Contains(search), new[] { "category" });
+            }
+            else
+            {
+                products = await _productRepository.GetAll(null, new[] { "category" });
+            }
+            ViewBag.productscount = products.Count();
             return View(products);
+        }
+        public async Task<ActionResult> SearchWithAjex(string search)
+        {
+            IEnumerable<Product> products;
+
+            if (search != null)
+            {
+                ViewBag.search = search;
+                products = await _productRepository.GetAll(p => p.ProductName.Contains(search), new[] { "category" });
+            }
+            else
+            {
+                products = await _productRepository.GetAll(null, new[] { "category" });
+            }
+            ViewBag.productscount = products.Count();
+            return PartialView("_ProductCards", products);
         }
 
         // GET: ProductsController/Details/5
