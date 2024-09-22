@@ -28,14 +28,24 @@
             <div class="form-group">
                 <label asp-for="categoryId" class="control-label"></label>
                 <select asp-for="categoryId" asp-items="@(new SelectList(Model.categoryList, "Id", "CategoryName"))" class="form-control" >
-
                 </select>
                 <span asp-validation-for="categoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductImage" class="control-label"></label>
-                <input asp-for="ProductImage" class="form-control" />
-                <span asp-validation-for="ProductImage" class="text-danger"></span>
+                <label asp-for="@Model.ImageFile" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="@Model.ImageFile" class="form-control" onchange="loadFile(event)" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                @if (Model.ProductImage == null || Model.ProductImage == "")
+                {
+                    <img id="output" src='\Images\ProductsImages\noImage.png' alt="No Image" style="width:100%; height:100%" />
+                }
+                else
+                {
+                    <img id="output" src="@Model.ProductImage" alt="No Image" style="width:100%" />
+                }
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -49,5 +59,18 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        debugger
+        var loadFile = function (event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function () {
+                URL.revokeObjectURL(output.src)
+            }
+        };
+    </script>
 }

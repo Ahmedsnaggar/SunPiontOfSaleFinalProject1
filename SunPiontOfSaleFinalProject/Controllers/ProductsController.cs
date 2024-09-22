@@ -104,6 +104,11 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             try
             {
+                if (item.ImageFile != null)
+                {
+                    string FileName = await _uploadFile.UploadFileAsync("\\Images\\ProductsImages\\", item.ImageFile);
+                    item.ProductImage = FileName;
+                }
                 await _productRepository.UpdateItem(item);
                 return RedirectToAction(nameof(Index));
             }

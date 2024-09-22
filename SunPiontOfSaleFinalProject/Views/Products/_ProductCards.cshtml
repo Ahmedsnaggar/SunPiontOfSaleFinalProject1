@@ -2,19 +2,18 @@
 
 @foreach(var item in Model)
 {
-    <div class="card col-md-4 mb-2">
+    <div class="card col-md-4 mb-2 ">
 
         <div class="card-header"><h5>@item.ProductName</h5></div>
         <div class="card-footer">Category : @item.category.CategoryName  - Price : @item.DefaultPrice</div>
-        <div class="card-body">
+        <div class="card-body" style="height:300px;">
             @if (item.ProductImage == null || item.ProductImage == "")
             {
                 <img src='\Images\ProductsImages\noImage.png' alt="No Image" style="width:100%; height:100%" />
             }
             else
             {
-                <img src="@item.ProductImage" alt="No Image" style="width:100%" />
-
+                <img src="@item.ProductImage" alt="No Image" style="width:100%; height:100%" />
             }
         </div>
         <div class="card-footer">

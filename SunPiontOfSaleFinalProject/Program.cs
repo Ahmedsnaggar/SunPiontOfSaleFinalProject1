@@ -4,6 +4,9 @@ using SunPiontOfSaleFinalProject.Repositories.Interfaces;
 using SunPiontOfSaleFinalProject.Repositories.Emplimintations;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Identity;
+using SunPiontOfSaleFinalProject.Repositories.Context;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<MyDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+
+builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
+{
+    opt.Password.RequiredLength = 3;
+    opt.Password.RequiredUniqueChars = 0;
+    opt.Password.RequireNonAlphanumeric = false;
+    opt.Password.RequireDigit = false;
+    opt.Password.RequireLowercase = false;
+    opt.Password.RequireUppercase = false;   
+}).AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
+
+
+
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<ICategoreRepository, CategoryRepository>();
 builder.Services.AddScoped<IUploadFile, UploadFile>();
