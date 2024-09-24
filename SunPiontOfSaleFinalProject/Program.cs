@@ -24,9 +24,13 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(opt =>
     opt.Password.RequireDigit = false;
     opt.Password.RequireLowercase = false;
     opt.Password.RequireUppercase = false;   
+    opt.SignIn.RequireConfirmedEmail = false;
 }).AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
 
-
+builder.Services.ConfigureApplicationCookie(opt =>
+{
+    opt.AccessDeniedPath = new PathString("/Account/AccessDeniedTest");  
+});
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<ICategoreRepository, CategoryRepository>();

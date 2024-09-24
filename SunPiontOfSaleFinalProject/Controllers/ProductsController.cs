@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ContextFile;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
 using SunPiontOfSaleFinalProject.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SunPiontOfSaleFinalProject.App.Controllers
 {
@@ -17,7 +18,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             _categoryRepository = categoryRepository;
             _uploadFile = uploadFile;
         }
-
+        [AllowAnonymous]
         // GET: ProductsController
         public async Task<ActionResult> Index(string search)
         {
@@ -57,7 +58,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             return View(await _productRepository.GetById(id));
         }
-
+        [Authorize(Roles ="Admin")]
         // GET: ProductsController/Create
         public async Task<ActionResult> Create()
         {
@@ -66,7 +67,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             var product = new Product() { categoryList = category.ToList() };
             return View(product);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: ProductsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -87,7 +88,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
                 return View();
             }
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: ProductsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
@@ -96,7 +97,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             product.categoryList = category.ToList();
             return View("EditProduct", product);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -117,13 +118,13 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
                 return View("EditProduct");
             }
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: ProductsController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]

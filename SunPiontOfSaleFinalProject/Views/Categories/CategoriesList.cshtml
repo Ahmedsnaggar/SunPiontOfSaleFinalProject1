@@ -7,7 +7,11 @@
 <h1>Categories</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if(User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
+    
 </p>
 <table class="table">
     <thead>
@@ -37,9 +41,12 @@
                 @Html.DisplayFor(modelItem => item.CategoryDescription)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) <span>|</span>
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) <span>|</span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id });
+                    }
             </td>
         </tr>
 }

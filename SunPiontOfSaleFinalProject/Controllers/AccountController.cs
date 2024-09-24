@@ -27,11 +27,15 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
                 {
                     UserName = model.UserName,
                     Email = model.Email,
-                    Address = ""
+                    Address = "",
+                    EmailConfirmed = true
                  };
                     var result = await _userManager.CreateAsync(newuser, model.Password);
+
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(newuser, "User");
+                    await _signInManager.SignInAsync(newuser, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
                 
@@ -42,6 +46,57 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
                 
             }
             return View(model);
+        }
+
+        public IActionResult Login(string? ReturnUrl)
+        {
+            ViewData["ReturnUrl"] = ReturnUrl;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model, string? ReturnUrl)
+        {
+            if (ModelState.IsValid) 
+            {
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                if (user == null)
+                {
+                    user = await _userManager.FindByEmailAsync(model.UserName);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "User name not correct");
+                        return View(model);
+                    }
+                   
+                }
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.Rememberme, false);
+                if (result.Succeeded)
+                {
+                    if(!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                    {
+                        return Redirect(ReturnUrl);
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
+                    ModelState.AddModelError(string.Empty, "Password not correct");
+            }
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult AccessDeniedTest()
+        {
+            return View();
         }
     }
 }

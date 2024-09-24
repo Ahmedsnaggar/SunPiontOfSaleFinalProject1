@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ContextFile;
 using SunPiontOfSaleFinalProject.Entiteis.Models;
 using SunPiontOfSaleFinalProject.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SunPiontOfSaleFinalProject.App.Controllers
 {
@@ -14,26 +15,27 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             _categoryRepository = categoryRepository;
         }
-
+        [Authorize(Roles = "Admin, User")]
         // GET: CategoriesController
         public async Task<ActionResult> Index()
         {
             var categories = await _categoryRepository.GetAll();
             return View("CategoriesList", categories);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: CategoriesController/Details/5
         public async Task<ActionResult> Details(int id)
         {
             var category = await _categoryRepository.GetById(id);
             return View(category);
         }
+        [Authorize(Roles = "Admin")]
         // GET: CategoriesController/Create
         public async Task<ActionResult> Create()
         {
             return View("NewCategory");
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -56,7 +58,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
                 return View("NewCategory");
             }
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: CategoriesController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
@@ -67,7 +69,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             }
             return View(category);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -83,14 +85,14 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
                 return View();
             }
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: CategoriesController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
             var category = await _categoryRepository.GetById(id);
             return View(category);
         }
-
+        [Authorize(Roles = "Admin")]
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
