@@ -58,7 +58,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             return View(await _productRepository.GetById(id));
         }
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         // GET: ProductsController/Create
         public async Task<ActionResult> Create()
         {

@@ -7,7 +7,7 @@
 <h1>Categories</h1>
 
 <p>
-    @if(User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Creator")))
     {
         <a asp-action="Create">Create New</a>
     }

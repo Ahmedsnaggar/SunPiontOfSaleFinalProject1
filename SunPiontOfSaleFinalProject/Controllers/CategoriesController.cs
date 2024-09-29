@@ -15,7 +15,7 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
         {
             _categoryRepository = categoryRepository;
         }
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles = "Admin, Creator")]
         // GET: CategoriesController
         public async Task<ActionResult> Index()
         {
@@ -29,13 +29,13 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             var category = await _categoryRepository.GetById(id);
             return View(category);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Creator")]
         // GET: CategoriesController/Create
         public async Task<ActionResult> Create()
         {
             return View("NewCategory");
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Creator")]
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

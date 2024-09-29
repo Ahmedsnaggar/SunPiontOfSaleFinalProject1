@@ -14,7 +14,6 @@ namespace SunPiontOfSaleFinalProject.Repositories.Emplimintations
             _db = db;
             _dbSet = db.Set<T>();
         }
-
         public async Task<T> AddItem(T item)
         {
             await _dbSet.AddAsync(item);

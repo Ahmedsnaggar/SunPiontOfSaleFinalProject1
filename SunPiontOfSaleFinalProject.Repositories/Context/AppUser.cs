@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SunPiontOfSaleFinalProject.Entiteis.Models;
 
 namespace SunPiontOfSaleFinalProject.Repositories.Context
 {
