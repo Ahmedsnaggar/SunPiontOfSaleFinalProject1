@@ -13,15 +13,17 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
     {
         private UserManager<AppUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-        public UsersController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        private IHttpContextAccessor _contextAccessor;
+        public UsersController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IHttpContextAccessor contextAccessor)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _contextAccessor = contextAccessor;
         }
-
+        #region Users
         public async Task<IActionResult> UsersList()
         {
-            #region Users
+           
             var users =  await _userManager.Users.Select(c=> new UserViewModel()
             {
                 Id = c.Id,
@@ -68,6 +70,33 @@ namespace SunPiontOfSaleFinalProject.App.Controllers
             await _userManager.RemoveFromRolesAsync(user, userRoles);
             await _userManager.AddToRolesAsync(user, model.Roles.Where(r=> r.IsSelected== true).Select(rn=> rn.RoleName));
             return RedirectToAction("UsersList");
+        }
+        [AllowAnonymous]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [AllowAnonymous]
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string Username = _contextAccessor.HttpContext.User.Identity.Name;
+                var user = await _userManager.FindByNameAsync(Username);
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            return View(model);
         }
         #endregion
 
